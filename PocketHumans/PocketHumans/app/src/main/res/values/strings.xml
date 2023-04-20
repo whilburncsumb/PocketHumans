@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Pocket Humans</string>
+    <string name="hello_welcome_to_pocket_humans">Hello, welcome to Pocket Humans!\n Log in to start playing!</string>
+    <string name="dont_have_an_account_yet">Dont have an account yet?</string>
+    <string name="register_button_text">Register\n(Not Yet Implemented)</string>
+    <string name="login_button_text">Log in!</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="pocket_humans_landing_text">Pocket Humans!\nGotta Employ Em All!</string>
+    <string name="landing_logout_button">Log Out</string>
+    <string name="admin_edit_humans">ADMIN: Edit Humans</string>
+    <string name="make_a_human">Make a Human!</string>
+    <string name="human_battle">Human Battle!</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="register_a_new_account">Register a new account!</string>
+    <string name="login_fail_feedback">User details do not match any records.\nCheck your username and password and try again.</string>
+    <string name="hello">Hello</string>
+</resources>
