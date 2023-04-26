@@ -16,8 +16,6 @@ import com.example.pockethumans.databinding.ActivityMainBinding;
 import com.example.pockethumans.DB.UserLoginDAO;
 import com.example.pockethumans.DB.AppDatabase;
 
-import java.util.Locale;
-
 public class MainActivity extends AppCompatActivity {
     EditText mLoginUsername;
     EditText mLoginPassword;
@@ -70,6 +68,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mLoginRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = RegisterActivity.getIntent(getApplicationContext());
+                startActivity(intent);
+            }
+        });
+
     }
 
     public static Intent getIntent(Context context){

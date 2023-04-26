@@ -20,8 +20,14 @@ public interface UserLoginDAO {
     @Delete
     void delete(User... users);
 
+    @Query("DELETE FROM " + AppDatabase.USER_TABLE + " WHERE userId = :userId")
+    void deleteById(int userId);
+
     @Query("SELECT * FROM " + AppDatabase.USER_TABLE + " ORDER BY username desc")
     List<User> getUsers();
+
+    @Query("SELECT username FROM " + AppDatabase.USER_TABLE + " ORDER BY username desc")
+    List<String> getUsernames();
 
     @Query("SELECT * FROM " + AppDatabase.USER_TABLE + " WHERE username = :username AND password = :password")
     User checkLogin(String username, String password);
