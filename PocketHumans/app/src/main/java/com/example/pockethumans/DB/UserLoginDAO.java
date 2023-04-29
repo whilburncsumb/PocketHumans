@@ -23,11 +23,11 @@ public interface UserLoginDAO {
     @Query("DELETE FROM " + AppDatabase.USER_TABLE + " WHERE userId = :userId")
     void deleteById(int userId);
 
-    @Query("SELECT * FROM " + AppDatabase.USER_TABLE + " ORDER BY username desc")
-    List<User> getUsers();
+    @Query("SELECT * FROM " + AppDatabase.USER_TABLE + " ORDER BY username")
+    List<User> listUsers();
 
-    @Query("SELECT username FROM " + AppDatabase.USER_TABLE + " ORDER BY username desc")
-    List<String> getUsernames();
+    @Query("SELECT username FROM " + AppDatabase.USER_TABLE + " ORDER BY username")
+    List<String> listUsernames();
 
     @Query("SELECT * FROM " + AppDatabase.USER_TABLE + " WHERE username = :username AND password = :password")
     User checkLogin(String username, String password);

@@ -1,6 +1,8 @@
 package com.example.pockethumans;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,14 +11,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.pockethumans.DB.AppDatabase;
+import com.example.pockethumans.DB.UserLoginDAO;
 import com.example.pockethumans.databinding.ActivityLandingBinding;
 
 public class LandingActivity extends AppCompatActivity {
 
-    private static String currentUser;
-    private static boolean isAdmin;
-    private static int userId;
-
+    private static User currentUser;
     TextView mLandingTextview;
     Button mHumanBattleButton;
     Button mMakeHumanButton;
@@ -29,22 +30,41 @@ public class LandingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
 
+        UserLoginDAO mUsersDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DATABASE_NAME)
+                .allowMainThreadQueries()
+                .build()
+                .UserLoginDAO();
+
         mLandingBinding = ActivityLandingBinding.inflate(getLayoutInflater());
         setContentView(mLandingBinding.getRoot());
+        currentUser = mUsersDAO.checkUserByID(getIntent().getIntExtra("USERID",0));
 
-        currentUser = getIntent().getStringExtra("USERNAME");
-        isAdmin = getIntent().getBooleanExtra("ISADMIN",false);
         mLandingTextview = mLandingBinding.landingTextview;
         mHumanBattleButton = mLandingBinding.battleHumanButton;
         mEditHumanButton =mLandingBinding.editHumanButton;
         mMakeHumanButton = mLandingBinding.makeHumanButton;
         mLogoutButton = mLandingBinding.landingLogoutButton;
 
-        mLandingTextview.setText(getString(R.string.pocket_humans_landing_text) + "\nWelcome " + currentUser);
-        if(isAdmin){
+        mLandingTextview.setText(getString(R.string.pocket_humans_landing_text) + "\nWelcome " + currentUser.getUsername());
+        if(currentUser.isAdmin()){
             //Set admin only buttons to visible
             mEditHumanButton.setVisibility(View.VISIBLE);
         }
+
+        mHumanBattleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = BattleHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId());
+                startActivity(intent);
+            }
+        });
+        mEditHumanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = EditHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId());
+                startActivity(intent);
+            }
+        });
 
         mLogoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,11 +75,9 @@ public class LandingActivity extends AppCompatActivity {
         });
     }
 
-    public static Intent getIntent(Context context, User user){
+    public static Intent getIntent(Context context, int userId){
         Intent intent = new Intent(context, LandingActivity.class);
-        intent.putExtra("USERID", user.getUserId());
-        intent.putExtra("USERNAME", user.getUsername());
-        intent.putExtra("ISADMIN", user.isAdmin());
+        intent.putExtra("USERID", userId);
         return intent;
     }
 }
