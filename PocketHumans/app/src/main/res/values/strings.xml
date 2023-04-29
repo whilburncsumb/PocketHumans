@@ -22,4 +22,8 @@
     <string name="password_mismatch">Passwords do not match, please check again.</string>
     <string name="username_cannot_be_blank">Username cannot be blank</string>
     <string name="password_cannot_be_blank">Password cannot be blank</string>
+    <string name="description">Description</string>
+    <string name="name">Name</string>
+    <string name="submit">Submit</string>
+    <string name="stat_total_must_not_exceed_90">Stat total must not exceed 90</string>
 </resources>

@@ -6,7 +6,6 @@ import androidx.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,7 +62,7 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 //Check if username is taken
-                if (mUsersDAO.getUsernames().contains(username)) {
+                if (mUsersDAO.listUsernames().contains(username)) {
                     mRegisterFeedback.setText(R.string.username_taken);
                     return;
                 }
@@ -75,7 +74,7 @@ public class RegisterActivity extends AppCompatActivity {
                     mRegisterFeedback.setText("");
                     User user = new User(username, password, false);
                     mUsersDAO.insert(user);
-                    Intent intent = LandingActivity.getIntent(getApplicationContext(), user);
+                    Intent intent = LandingActivity.getIntent(getApplicationContext(), user.getUserId());
                     startActivity(intent);
                 }
             }

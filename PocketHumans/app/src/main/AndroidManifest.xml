@@ -28,6 +28,14 @@
             android:name=".RegisterActivity"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".BattleHumanActivity"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".EditHumanActivity"
+            android:exported="true">
+        </activity>
     </application>
 
 </manifest>

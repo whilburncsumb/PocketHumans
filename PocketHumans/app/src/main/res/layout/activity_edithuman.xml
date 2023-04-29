@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbarFadeDuration="@integer/material_motion_duration_long_2">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".EditHumanActivity">
+
+        <TextView
+            android:id="@+id/selectTextview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/select_your_human"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/selectHumanSpinner"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectTextview" />
+
+        <Button
+            android:id="@+id/editHumanSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/submit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanDefense" />
+
+        <EditText
+            android:id="@+id/editHumanName"
+            android:layout_width="210dp"
+            android:layout_height="53dp"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="@string/name"
+            android:inputType="text"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectHumanSpinner" />
+
+        <EditText
+            android:id="@+id/editHumanAttack"
+            android:layout_width="120dp"
+            android:layout_height="51dp"
+            android:ems="10"
+            android:hint="Attack Stat"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@id/editHumanDefense"
+            app:layout_constraintHorizontal_bias="0.086"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editHumanAttackHint" />
+
+        <EditText
+            android:id="@+id/editHumanSpeed"
+            android:layout_width="120dp"
+            android:layout_height="51dp"
+            android:ems="10"
+            android:hint="Speed Stat"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.892"
+            app:layout_constraintStart_toEndOf="@id/editHumanDefense"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanSpeedHint" />
+
+        <EditText
+            android:id="@+id/editHumanDefense"
+            android:layout_width="120dp"
+            android:layout_height="51dp"
+            android:ems="10"
+            android:hint="Defense Stat"
+            android:inputType="number"
+            android:maxLength="2"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@id/editHumanAttack"
+            app:layout_constraintEnd_toStartOf="@id/editHumanSpeed"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanDefenseHint" />
+
+        <TextView
+            android:id="@+id/editHumanStatFeedback"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="@string/stat_total_must_not_exceed_90"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.501"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/move4Spinner" />
+
+        <TextView
+            android:id="@+id/editHumanDefenseHint"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Defense"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@id/editHumanSpeedHint"
+            app:layout_constraintHorizontal_bias="0.502"
+            app:layout_constraintStart_toEndOf="@id/editHumanAttackHint"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanStatFeedback" />
+
+        <TextView
+            android:id="@+id/editHumanSpeedHint"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Speed"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.366"
+            app:layout_constraintStart_toEndOf="@+id/editHumanDefenseHint"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanStatFeedback" />
+
+        <TextView
+            android:id="@+id/editHumanAttackHint"
+            android:layout_width="120dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Attack"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@+id/editHumanDefenseHint"
+            app:layout_constraintHorizontal_bias="0.532"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanStatFeedback" />
+
+        <EditText
+            android:id="@+id/editHumanDescription"
+            android:layout_width="362dp"
+            android:layout_height="161dp"
+            android:layout_marginTop="20dp"
+            android:ems="10"
+            android:gravity="start|top"
+            android:hint="@string/description"
+            android:inputType="textMultiLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.49"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanName" />
+
+        <TextView
+            android:id="@+id/editHumanMoveHint"
+            android:layout_width="116dp"
+            android:layout_height="42dp"
+            android:layout_marginTop="20dp"
+            android:text="Select Moves"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanDescription" />
+
+        <Spinner
+            android:id="@+id/move1Spinner"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@id/move2Spinner"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanMoveHint" />
+
+        <Spinner
+            android:id="@+id/move2Spinner"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.254"
+            app:layout_constraintStart_toEndOf="@+id/move1Spinner"
+            app:layout_constraintTop_toBottomOf="@+id/editHumanMoveHint" />
+
+        <Spinner
+            android:id="@+id/move3Spinner"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@id/move4Spinner"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/move1Spinner" />
+
+        <Spinner
+            android:id="@+id/move4Spinner"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="16dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.254"
+            app:layout_constraintStart_toEndOf="@+id/move3Spinner"
+            app:layout_constraintTop_toBottomOf="@+id/move2Spinner" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
