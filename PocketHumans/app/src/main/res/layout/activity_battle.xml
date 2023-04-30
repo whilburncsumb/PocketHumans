@@ -49,7 +49,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="You can't use Dr.C until you defeat him in a battle!"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="#FF0000"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
@@ -85,14 +85,71 @@
         tools:context=".BattleActivity">
 
         <Button
-            android:id="@+id/endBattleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="Human Battle 2!"
+            android:id="@+id/retreatButton"
+            android:layout_width="164dp"
+            android:layout_height="51dp"
+            android:layout_marginTop="36dp"
+            android:text="Retreat!"
+            android:backgroundTint="#FF0000"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/selectMove3Button" />
+
+        <ScrollView
+            android:id="@+id/battleOutputScroll"
+            android:layout_width="366dp"
+            android:layout_height="305dp"
+            android:layout_marginTop="36dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/battleOutputText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="#99FFEB3B"
+                android:text="Begin Human Battle!"
+                android:textColor="#E4181A39"
+                android:textSize="10pt" />
+        </ScrollView>
+
+        <Button
+            android:id="@+id/selectMove1Button"
+            android:layout_width="164dp"
+            android:layout_height="51dp"
+            app:layout_constraintEnd_toStartOf="@+id/selectMove2Button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/battleOutputScroll" />
+
+        <Button
+            android:id="@+id/selectMove2Button"
+            android:layout_width="164dp"
+            android:layout_height="51dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/selectMove1Button"
+            app:layout_constraintTop_toBottomOf="@+id/battleOutputScroll" />
+
+        <Button
+            android:id="@+id/selectMove4Button"
+            android:layout_width="164dp"
+            android:layout_height="51dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintLeft_toRightOf="@id/selectMove3Button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectMove2Button" />
+
+        <Button
+            android:id="@+id/selectMove3Button"
+            android:layout_width="164dp"
+            android:layout_height="51dp"
+            app:layout_constraintEnd_toStartOf="@+id/selectMove4Button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectMove1Button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ViewFlipper>

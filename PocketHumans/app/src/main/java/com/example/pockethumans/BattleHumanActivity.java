@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -28,6 +29,8 @@ import com.example.pockethumans.databinding.ActivityBattleBinding;
 public class BattleHumanActivity extends AppCompatActivity {
     ActivityBattleBinding mBattleHumanBinding;
     boolean validSelection = true;
+    Human playerHuman;
+    Human cpuHuman;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +53,25 @@ public class BattleHumanActivity extends AppCompatActivity {
         mBattleHumanBinding = ActivityBattleBinding.inflate(getLayoutInflater());
         setContentView(mBattleHumanBinding.getRoot());
 
+        ViewFlipper flipper = mBattleHumanBinding.viewFlipper;
+        //bindings for selection screen view
         Spinner mSelectYourHumanSpinner = mBattleHumanBinding.selectYourHumanSpinner;
         Spinner mSelectOpponentSpinner = mBattleHumanBinding.selectOpponentSpinner;
         Button mBeginBattleButton= mBattleHumanBinding.beginBattleButton;
         TextView mUnlockFeedback = mBattleHumanBinding.selectionFeedback1;
-        ViewFlipper flipper = mBattleHumanBinding.viewFlipper;
         ObjectAnimator animator = ObjectAnimator.ofFloat(mUnlockFeedback,"rotation",-5,5);
         animator.setDuration(250);
         animator.setRepeatMode(ValueAnimator.REVERSE);
         animator.setRepeatCount(2);
+
+        //bindings for battle screen view
+        Button mSelectMove1 = mBattleHumanBinding.selectMove1Button;
+        Button mSelectMove2 = mBattleHumanBinding.selectMove2Button;
+        Button mSelectMove3 = mBattleHumanBinding.selectMove3Button;
+        Button mSelectMove4 = mBattleHumanBinding.selectMove4Button;
+        Button mSelectRetreat = mBattleHumanBinding.retreatButton;
+        ScrollView mBattleOutputScroll = mBattleHumanBinding.battleOutputScroll;
+        TextView mBattleText = mBattleHumanBinding.battleOutputText;
 
         //populate the list of humans
         ArrayAdapter<Human> adapterH = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, mHumanDAO.listHumans());
@@ -90,10 +103,27 @@ public class BattleHumanActivity extends AppCompatActivity {
         mBeginBattleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!validSelection){
+                    animator.start();
+                } else {
+                    //begin the battle
+                    //transition other elements to be invisible
+                    playerHuman = (Human) mSelectYourHumanSpinner.getSelectedItem();
+                    cpuHuman = (Human) mSelectOpponentSpinner.getSelectedItem();
+                    flipper.showNext();
+                    mSelectMove1.setText("move 1!");
+                    mBattleText.append("\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
+//                    mBattleText.append("\nHas " + playerHuman.getHp() + " hit points.");
+                }
+            }
+        });
 
-                flipper.showNext();
-                //begin the battle
-                //transition other elements to be invisible
+        mSelectRetreat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBattleText.append("\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
+//                mBattleOutputScroll.scrollTo(0,5000);
+                mBattleOutputScroll.fullScroll(View.FOCUS_DOWN);
             }
         });
     }
