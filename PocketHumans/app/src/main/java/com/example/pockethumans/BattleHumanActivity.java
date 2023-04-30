@@ -4,16 +4,12 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
@@ -34,6 +30,7 @@ import java.util.Random;
 public class BattleHumanActivity extends AppCompatActivity {
     ActivityBattleBinding mBattleHumanBinding;
     boolean validSelection = true;
+    boolean winnerDecided = false;
     Human playerHuman;
     Human cpuHuman;
     ArrayList<Move> moves = new ArrayList<>();
@@ -156,31 +153,122 @@ public class BattleHumanActivity extends AppCompatActivity {
         mSelectMove1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(playerHuman.getModifiedSpeed()<cpuHuman.getModifiedSpeed()){
-                    //cpu is faster
-                    useMove(moves.get(random.nextInt(4)+4),mBattleText,cpuHuman,playerHuman);
-                    if(playerHuman.getHp()>0){
-                        useMove(moves.get(0),mBattleText,playerHuman,cpuHuman);
-                    }
-                } else {
-                    //player is faster
-                    useMove(moves.get(0),mBattleText,playerHuman,cpuHuman);
-                    if(cpuHuman.getHp()>0){
-                        useMove(moves.get(random.nextInt(4)+4),mBattleText,cpuHuman,playerHuman);
-                    }
-                }
+                combatRound(mBattleText,0);
+            }
+        });
 
+        mSelectMove2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                combatRound(mBattleText,1);
+            }
+        });
+
+        mSelectMove3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                combatRound(mBattleText,2);
+            }
+        });
+
+        mSelectMove4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                combatRound(mBattleText,3);
             }
         });
 
     }
     public void output(TextView t, String s){
+        //prints texts to screen and scrolls to bottom
         t.append("\n"+ s);
         t.scrollTo(0,t.getLayout().getLineTop(t.getLineCount()) - t.getHeight());
         return;
     }
     public void useMove(Move m, TextView t, Human user, Human target){
-        output(t,user.getName() + " used "+ m.getName() + " on " + target.getName() + "!");
+        //outputs results of a human using a move
+        switch (m.getType()){
+            case "attack": {
+                output(t,user.getName() + " used "+ m.getName() + " on " + target.getName() + "!");
+                double damage = (double) ((user.getModifiedAttack()+m.getPower())-target.getModifiedDefense());
+                if(damage<1){
+                    damage=1;//damage cannot be less than 1 hp
+                }
+                output(t,target.getName() + " took "+ damage + " damage!");
+                target.setHp(target.getHp()-damage);
+                if(target.getHp()<=0){
+                    output(t, target.getName() + " fainted! " + user.getName() + " is the winner!");
+                }
+                break;
+            }
+            case "heal": {
+                output(t,user.getName() + " used "+ m.getName() + "! They healed " + m.getPower() + " hit points!");
+                user.setHp(user.getHp()+m.getPower());
+                break;
+            }
+            case "statusAttack":{
+                if(m.getPower()>1){
+                    //buffing move
+                    output(t,user.getName() + " used "+ m.getName() + "!");
+                    output(t,user.getName() + " increased their attack stat!");
+                    user.setAttackModifier(user.getAttackModifier()*m.getPower());
+                } else {
+                    output(t,user.getName() + " used "+ m.getName() + " on " + target.getName() + "!");
+                    output(t,user.getName() + " reduced "+ target.getName() + "'s attack stat!");
+                    target.setAttackModifier(target.getAttackModifier()*m.getPower());
+                }
+                break;
+            }
+            case "statusDefense":{
+                if(m.getPower()>1){
+                    //buffing move
+                    output(t,user.getName() + " used "+ m.getName() + "!");
+                    output(t,user.getName() + " increased their defense stat!");
+                    user.setDefenseModifier(user.getDefenseModifier()*m.getPower());
+                } else {
+                    output(t,user.getName() + " used "+ m.getName() + " on " + target.getName() + "!");
+                    output(t,user.getName() + " reduced "+ target.getName() + "'s defense stat!");
+                    target.setDefenseModifier(target.getDefenseModifier()*m.getPower());
+                }
+                break;
+            }
+            case "statusSpeed":{
+                if(m.getPower()>1){
+                    //buffing move
+                    output(t,user.getName() + " used "+ m.getName() + "!");
+                    output(t,user.getName() + " increased their speed stat!");
+                    user.setSpeedModifier(user.getSpeedModifier()*m.getPower());
+                } else {
+                    output(t,user.getName() + " used "+ m.getName() + " on " + target.getName() + "!");
+                    output(t,user.getName() + " reduced "+ target.getName() + "'s attack stat!");
+                    target.setSpeedModifier(target.getSpeedModifier()*m.getPower());
+                }
+                break;
+            }
+            default:{
+                output(t,"ERROR: " + m.getName() + " HAS INVALID TYPE!");
+                break;
+            }
+        }
+    }
+    public void combatRound(TextView t,int moveIndex){
+        //Runs a round of combat, used when user selects a move
+        if(playerHuman.getModifiedSpeed()<cpuHuman.getModifiedSpeed()){
+            //cpu is faster
+            System.out.println(random.nextInt(4)+4);//for some reason the next line breaks if this sout isn't here???
+            useMove(moves.get(random.nextInt(4)+4),t,cpuHuman,playerHuman);
+            if(playerHuman.getHp()>0){
+                useMove(moves.get(moveIndex),t,playerHuman,cpuHuman);
+            }
+        } else {
+            //player is faster
+            System.out.println(random.nextInt(4)+4);//for some reason the next line breaks if this sout isn't here???
+            useMove(moves.get(moveIndex),t,playerHuman,cpuHuman);
+            if(cpuHuman.getHp()>0){
+                useMove(moves.get(random.nextInt(4)+4),t,cpuHuman,playerHuman);
+            }
+        }
+
     }
     public static Intent getIntent(Context context, int userId){
         Intent intent = new Intent(context, BattleHumanActivity.class);
