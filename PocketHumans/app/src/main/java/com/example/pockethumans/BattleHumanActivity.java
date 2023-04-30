@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
 import androidx.room.Room;
 
 import com.example.pockethumans.DB.AppDatabase;
@@ -26,11 +28,16 @@ import com.example.pockethumans.DB.MovesDAO;
 import com.example.pockethumans.DB.UserLoginDAO;
 import com.example.pockethumans.databinding.ActivityBattleBinding;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class BattleHumanActivity extends AppCompatActivity {
     ActivityBattleBinding mBattleHumanBinding;
     boolean validSelection = true;
     Human playerHuman;
     Human cpuHuman;
+    ArrayList<Move> moves = new ArrayList<>();
+    Random random = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +77,9 @@ public class BattleHumanActivity extends AppCompatActivity {
         Button mSelectMove3 = mBattleHumanBinding.selectMove3Button;
         Button mSelectMove4 = mBattleHumanBinding.selectMove4Button;
         Button mSelectRetreat = mBattleHumanBinding.retreatButton;
-        ScrollView mBattleOutputScroll = mBattleHumanBinding.battleOutputScroll;
-        TextView mBattleText = mBattleHumanBinding.battleOutputText;
+//        ScrollView mBattleOutputScroll = mBattleHumanBinding.battleOutputScroll;
+        TextView mBattleText = mBattleHumanBinding.battleOutput;
+        mBattleText.setMovementMethod(new ScrollingMovementMethod());
 
         //populate the list of humans
         ArrayAdapter<Human> adapterH = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, mHumanDAO.listHumans());
@@ -111,9 +119,27 @@ public class BattleHumanActivity extends AppCompatActivity {
                     playerHuman = (Human) mSelectYourHumanSpinner.getSelectedItem();
                     cpuHuman = (Human) mSelectOpponentSpinner.getSelectedItem();
                     flipper.showNext();
-                    mSelectMove1.setText("move 1!");
+                    moves.add(mMovesDAO.getMove(playerHuman.getMove1id()));
+                    moves.add(mMovesDAO.getMove(playerHuman.getMove2id()));
+                    moves.add(mMovesDAO.getMove(playerHuman.getMove3id()));
+                    moves.add(mMovesDAO.getMove(playerHuman.getMove4id()));
+                    moves.add(mMovesDAO.getMove(cpuHuman.getMove1id()));
+                    moves.add(mMovesDAO.getMove(cpuHuman.getMove2id()));
+                    moves.add(mMovesDAO.getMove(cpuHuman.getMove3id()));
+                    moves.add(mMovesDAO.getMove(cpuHuman.getMove4id()));
+
+                    mSelectMove1.setText(moves.get(0).getName());
+                    TooltipCompat.setTooltipText(mSelectMove1,moves.get(0).getDescription());
+                    mSelectMove2.setText(moves.get(1).getName());
+                    TooltipCompat.setTooltipText(mSelectMove2,moves.get(1).getDescription());
+                    mSelectMove3.setText(moves.get(2).getName());
+                    TooltipCompat.setTooltipText(mSelectMove3,moves.get(2).getDescription());
+                    mSelectMove4.setText(moves.get(3).getName());
+                    TooltipCompat.setTooltipText(mSelectMove4,moves.get(3).getDescription());
                     mBattleText.append("\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
-//                    mBattleText.append("\nHas " + playerHuman.getHp() + " hit points.");
+                    mBattleText.append("\nHint: Long Press a move button to see it's description!");
+//                    mBattleText.scrollTo(0,mBattleText.getLayout().getLineTop(mBattleText.getLineCount()) - mBattleText.getHeight()-680);
+
                 }
             }
         });
@@ -121,11 +147,40 @@ public class BattleHumanActivity extends AppCompatActivity {
         mSelectRetreat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mBattleText.append("\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
-//                mBattleOutputScroll.scrollTo(0,5000);
-                mBattleOutputScroll.fullScroll(View.FOCUS_DOWN);
+//                output(mBattleText,"\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
+                Intent intent = BattleHumanActivity.getIntent(getApplicationContext(), currentUser.getUserId());
+                startActivity(intent);
             }
         });
+
+        mSelectMove1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(playerHuman.getModifiedSpeed()<cpuHuman.getModifiedSpeed()){
+                    //cpu is faster
+                    useMove(moves.get(random.nextInt(4)+4),mBattleText,cpuHuman,playerHuman);
+                    if(playerHuman.getHp()>0){
+                        useMove(moves.get(0),mBattleText,playerHuman,cpuHuman);
+                    }
+                } else {
+                    //player is faster
+                    useMove(moves.get(0),mBattleText,playerHuman,cpuHuman);
+                    if(cpuHuman.getHp()>0){
+                        useMove(moves.get(random.nextInt(4)+4),mBattleText,cpuHuman,playerHuman);
+                    }
+                }
+
+            }
+        });
+
+    }
+    public void output(TextView t, String s){
+        t.append("\n"+ s);
+        t.scrollTo(0,t.getLayout().getLineTop(t.getLineCount()) - t.getHeight());
+        return;
+    }
+    public void useMove(Move m, TextView t, Human user, Human target){
+        output(t,user.getName() + " used "+ m.getName() + " on " + target.getName() + "!");
     }
     public static Intent getIntent(Context context, int userId){
         Intent intent = new Intent(context, BattleHumanActivity.class);
