@@ -2,7 +2,14 @@
 <module type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
-    <content url="file://$MODULE_DIR$" />
+    <content url="file://$MODULE_DIR$/PocketHumans">
+      <sourceFolder url="file://$MODULE_DIR$/PocketHumans/app/build/generated/ap_generated_sources/debug/out" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/PocketHumans/app/build/generated/data_binding_base_class_source_out/debug/out" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/PocketHumans/app/build/generated/source/buildConfig/debug" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/PocketHumans/app/src/androidTest/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/PocketHumans/app/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/PocketHumans/app/src/test/java" isTestSource="false" />
+    </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

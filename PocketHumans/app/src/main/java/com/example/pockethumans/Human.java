@@ -83,6 +83,10 @@ public class Human {
         this.hp = hp;
     }
 
+    public void addHp(double hp) {
+        this.hp += hp;
+    }
+
     public int getAttack() {
         return attack;
     }

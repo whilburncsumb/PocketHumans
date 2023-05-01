@@ -43,6 +43,8 @@ public class BattleHumanActivity extends AppCompatActivity {
     Button mSelectMove3;
     Button mSelectMove4;
     Button mSelectRetreat;
+    TextView mYourHealthBarText;
+    TextView mEnemyHealthBarText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,33 +83,75 @@ public class BattleHumanActivity extends AppCompatActivity {
         mSelectMove3 = mBattleHumanBinding.selectMove3Button;
         mSelectMove4 = mBattleHumanBinding.selectMove4Button;
         mSelectRetreat = mBattleHumanBinding.retreatButton;
-//        ScrollView mBattleOutputScroll = mBattleHumanBinding.battleOutputScroll;
         TextView mBattleText = mBattleHumanBinding.battleOutput;
         mBattleText.setMovementMethod(new ScrollingMovementMethod());
+        //Couldn't get these to work but they would have been cool
+//        ProgressBar mYourHealthBar= mBattleHumanBinding.yourHumanHP;
+//        ProgressBar mEnemyHealthBar= mBattleHumanBinding.enemyHumanHP;
+        mYourHealthBarText= mBattleHumanBinding.yourHealthText;
+        mEnemyHealthBarText= mBattleHumanBinding.enemyHealthText;
 
         //populate the list of humans
         ArrayAdapter<Human> adapterH = new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, mHumanDAO.listHumans());
         adapterH.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSelectYourHumanSpinner.setAdapter(adapterH);
         mSelectOpponentSpinner.setAdapter(adapterH);
+        mSelectOpponentSpinner.setSelection(5);
 
         mSelectYourHumanSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Human selection = (Human) parent.getItemAtPosition(position);
-                if(selection.getHumanId()==6 && currentUser.isUnlockedDrC()){
+                Human oppSelection = (Human) mSelectOpponentSpinner.getSelectedItem();
+
+                if(selection.getHumanId()==oppSelection.getHumanId()){
+                    //prevent user from fighting a human against the same type of human
+                    validSelection = false;
+                    mUnlockFeedback.setVisibility(View.VISIBLE);
+                    mUnlockFeedback.setText(R.string.clone_human_feedback);
+                    animator.start();
+                    mBeginBattleButton.setEnabled(false);
+                } else if(selection.getHumanId()==6 && !currentUser.isUnlockedDrC()){
                     //if Dr.C, check that user has unlocked him
                     validSelection = false;
                     mUnlockFeedback.setVisibility(View.VISIBLE);
+                    mUnlockFeedback.setText(R.string.drc_need_to_unlock_feedback);
                     animator.start();
+                    mBeginBattleButton.setEnabled(false);
                 } else {
                     validSelection = true;
                     mUnlockFeedback.setVisibility(View.INVISIBLE);
+                    mBeginBattleButton.setEnabled(true);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        mSelectOpponentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Human selection = (Human) parent.getItemAtPosition(position);
+                Human oppSelection = (Human) mSelectYourHumanSpinner.getSelectedItem();
+
+                if(selection.getHumanId()==oppSelection.getHumanId()){
+                    validSelection = false;
+                    mUnlockFeedback.setVisibility(View.VISIBLE);
+                    mUnlockFeedback.setText(R.string.clone_human_feedback);
+                    animator.start();
+                    mBeginBattleButton.setEnabled(false);
+                } else {
+                    validSelection = true;
+                    mUnlockFeedback.setVisibility(View.INVISIBLE);
+                    mBeginBattleButton.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });
@@ -138,6 +182,8 @@ public class BattleHumanActivity extends AppCompatActivity {
                 TooltipCompat.setTooltipText(mSelectMove3,moves.get(2).getDescription());
                 mSelectMove4.setText(moves.get(3).getName());
                 TooltipCompat.setTooltipText(mSelectMove4,moves.get(3).getDescription());
+                mYourHealthBarText.setText(playerHuman.getName()  + getString(R.string.colon) + playerHuman.getHp() + getString(R.string.outof100));
+                mEnemyHealthBarText.setText(cpuHuman.getName()  + getString(R.string.colon) + cpuHuman.getHp() + getString(R.string.outof100));
                 mBattleText.append("\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
                 mBattleText.append(getString(R.string.long_press_hint));
 
@@ -183,8 +229,15 @@ public class BattleHumanActivity extends AppCompatActivity {
                 break;
             }
             case "heal": {
-                output(t,user.getName() + " used "+ m.getName() + "! They healed " + m.getPower() + " hit points!");
-                user.setHp(user.getHp()+m.getPower());
+                double heals = m.getPower();
+                if(user.getHp()+heals > 100){ //cannot overheal
+                    output(t,user.getName() + " used "+ m.getName() + "! They healed " + heals + " hit points and are now full!");
+                    user.setHp(100);
+                } else {
+                    output(t,user.getName() + " used "+ m.getName() + "! They healed " + heals + " hit points!");
+                    user.addHp(heals);
+                }
+
                 break;
             }
             case "statusAttack":{
@@ -266,10 +319,15 @@ public class BattleHumanActivity extends AppCompatActivity {
             mSelectMove2.setEnabled(false);
             mSelectMove3.setEnabled(false);
             mSelectMove4.setEnabled(false);
-            mSelectRetreat.setText("New Battle");
+            mSelectRetreat.setText(R.string.new_battle);
             mSelectRetreat.setBackgroundColor(Color.GREEN);
             mSelectRetreat.setTextColor(Color.BLACK);
         }
+        refreshHPDisplay();
+    }
+    public void refreshHPDisplay(){
+        mYourHealthBarText.setText(playerHuman.getName()  + getString(R.string.colon) + playerHuman.getHp() + getString(R.string.outof100));
+        mEnemyHealthBarText.setText(cpuHuman.getName()  + getString(R.string.colon) + cpuHuman.getHp() + getString(R.string.outof100));
     }
     public static Intent getIntent(Context context, int userId){
         Intent intent = new Intent(context, BattleHumanActivity.class);

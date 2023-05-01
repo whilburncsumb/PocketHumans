@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="You can't use Dr.C until you defeat him in a battle!"
+            android:text="@string/drc_need_to_unlock_feedback"
             android:textColor="#FF0000"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -75,6 +75,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectOpponentSpinner" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -144,6 +145,32 @@
             app:layout_constraintEnd_toStartOf="@+id/selectMove4Button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectMove1Button" />
+
+        <TextView
+            android:id="@+id/yourHealthText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="12dp"
+            android:text="example"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toTopOf="@+id/enemyHealthText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/enemyHealthText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="64dp"
+            android:text="example"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ViewFlipper>

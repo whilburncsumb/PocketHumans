@@ -27,4 +27,9 @@
     <string name="submit">Submit</string>
     <string name="stat_total_must_not_exceed_90">Stat total must not exceed 90</string>
     <string name="long_press_hint">\nHint: Long Press a move button to see it\'s description!</string>
+    <string name="drc_need_to_unlock_feedback">You can\'t use Dr.C until you defeat him in a battle!</string>
+    <string name="clone_human_feedback">You can\'t battle a human against themselves!</string>
+    <string name="colon">": "</string>
+    <string name="outof100">/100 HP</string>
+    <string name="new_battle">New Battle</string>
 </resources>
