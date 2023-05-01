@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
@@ -30,17 +31,23 @@ import java.util.Random;
 public class BattleHumanActivity extends AppCompatActivity {
     ActivityBattleBinding mBattleHumanBinding;
     boolean validSelection = true;
-    boolean winnerDecided = false;
+    int winnerDecided = 0; //0 if no winner has been chosen, 1 if the player wins, 2 if the cpu wins
     Human playerHuman;
     Human cpuHuman;
     ArrayList<Move> moves = new ArrayList<>();
     Random random = new Random();
+    User currentUser;
+
+    Button mSelectMove1;
+    Button mSelectMove2;
+    Button mSelectMove3;
+    Button mSelectMove4;
+    Button mSelectRetreat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_battle);
-
         UserLoginDAO mUsersDAO = Room.databaseBuilder(this, AppDatabase.class, AppDatabase.DATABASE_NAME)
                 .allowMainThreadQueries()
                 .build()
@@ -53,7 +60,7 @@ public class BattleHumanActivity extends AppCompatActivity {
                 .allowMainThreadQueries()
                 .build()
                 .HumanDAO();
-        User currentUser = mUsersDAO.checkUserByID(getIntent().getIntExtra("USERID",0));
+        currentUser = mUsersDAO.checkUserByID(getIntent().getIntExtra("USERID",0));
         mBattleHumanBinding = ActivityBattleBinding.inflate(getLayoutInflater());
         setContentView(mBattleHumanBinding.getRoot());
 
@@ -69,11 +76,11 @@ public class BattleHumanActivity extends AppCompatActivity {
         animator.setRepeatCount(2);
 
         //bindings for battle screen view
-        Button mSelectMove1 = mBattleHumanBinding.selectMove1Button;
-        Button mSelectMove2 = mBattleHumanBinding.selectMove2Button;
-        Button mSelectMove3 = mBattleHumanBinding.selectMove3Button;
-        Button mSelectMove4 = mBattleHumanBinding.selectMove4Button;
-        Button mSelectRetreat = mBattleHumanBinding.retreatButton;
+        mSelectMove1 = mBattleHumanBinding.selectMove1Button;
+        mSelectMove2 = mBattleHumanBinding.selectMove2Button;
+        mSelectMove3 = mBattleHumanBinding.selectMove3Button;
+        mSelectMove4 = mBattleHumanBinding.selectMove4Button;
+        mSelectRetreat = mBattleHumanBinding.retreatButton;
 //        ScrollView mBattleOutputScroll = mBattleHumanBinding.battleOutputScroll;
         TextView mBattleText = mBattleHumanBinding.battleOutput;
         mBattleText.setMovementMethod(new ScrollingMovementMethod());
@@ -88,7 +95,7 @@ public class BattleHumanActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Human selection = (Human) parent.getItemAtPosition(position);
-                if(selection.getHumanId()==6){
+                if(selection.getHumanId()==6 && currentUser.isUnlockedDrC()){
                     //if Dr.C, check that user has unlocked him
                     validSelection = false;
                     mUnlockFeedback.setVisibility(View.VISIBLE);
@@ -105,85 +112,59 @@ public class BattleHumanActivity extends AppCompatActivity {
             }
         });
 
-        mBeginBattleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!validSelection){
-                    animator.start();
-                } else {
-                    //begin the battle
-                    //transition other elements to be invisible
-                    playerHuman = (Human) mSelectYourHumanSpinner.getSelectedItem();
-                    cpuHuman = (Human) mSelectOpponentSpinner.getSelectedItem();
-                    flipper.showNext();
-                    moves.add(mMovesDAO.getMove(playerHuman.getMove1id()));
-                    moves.add(mMovesDAO.getMove(playerHuman.getMove2id()));
-                    moves.add(mMovesDAO.getMove(playerHuman.getMove3id()));
-                    moves.add(mMovesDAO.getMove(playerHuman.getMove4id()));
-                    moves.add(mMovesDAO.getMove(cpuHuman.getMove1id()));
-                    moves.add(mMovesDAO.getMove(cpuHuman.getMove2id()));
-                    moves.add(mMovesDAO.getMove(cpuHuman.getMove3id()));
-                    moves.add(mMovesDAO.getMove(cpuHuman.getMove4id()));
+        mBeginBattleButton.setOnClickListener(v -> {
+            if(!validSelection){
+                animator.start();
+            } else {
+                //begin the battle
+                //transition other elements to be invisible
+                playerHuman = (Human) mSelectYourHumanSpinner.getSelectedItem();
+                cpuHuman = (Human) mSelectOpponentSpinner.getSelectedItem();
+                flipper.showNext();
+                moves.add(mMovesDAO.getMove(playerHuman.getMove1id()));
+                moves.add(mMovesDAO.getMove(playerHuman.getMove2id()));
+                moves.add(mMovesDAO.getMove(playerHuman.getMove3id()));
+                moves.add(mMovesDAO.getMove(playerHuman.getMove4id()));
+                moves.add(mMovesDAO.getMove(cpuHuman.getMove1id()));
+                moves.add(mMovesDAO.getMove(cpuHuman.getMove2id()));
+                moves.add(mMovesDAO.getMove(cpuHuman.getMove3id()));
+                moves.add(mMovesDAO.getMove(cpuHuman.getMove4id()));
 
-                    mSelectMove1.setText(moves.get(0).getName());
-                    TooltipCompat.setTooltipText(mSelectMove1,moves.get(0).getDescription());
-                    mSelectMove2.setText(moves.get(1).getName());
-                    TooltipCompat.setTooltipText(mSelectMove2,moves.get(1).getDescription());
-                    mSelectMove3.setText(moves.get(2).getName());
-                    TooltipCompat.setTooltipText(mSelectMove3,moves.get(2).getDescription());
-                    mSelectMove4.setText(moves.get(3).getName());
-                    TooltipCompat.setTooltipText(mSelectMove4,moves.get(3).getDescription());
-                    mBattleText.append("\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
-                    mBattleText.append("\nHint: Long Press a move button to see it's description!");
-//                    mBattleText.scrollTo(0,mBattleText.getLayout().getLineTop(mBattleText.getLineCount()) - mBattleText.getHeight()-680);
+                mSelectMove1.setText(moves.get(0).getName());
+                TooltipCompat.setTooltipText(mSelectMove1,moves.get(0).getDescription());
+                mSelectMove2.setText(moves.get(1).getName());
+                TooltipCompat.setTooltipText(mSelectMove2,moves.get(1).getDescription());
+                mSelectMove3.setText(moves.get(2).getName());
+                TooltipCompat.setTooltipText(mSelectMove3,moves.get(2).getDescription());
+                mSelectMove4.setText(moves.get(3).getName());
+                TooltipCompat.setTooltipText(mSelectMove4,moves.get(3).getDescription());
+                mBattleText.append("\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
+                mBattleText.append(getString(R.string.long_press_hint));
 
-                }
             }
         });
 
-        mSelectRetreat.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                output(mBattleText,"\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
-                Intent intent = BattleHumanActivity.getIntent(getApplicationContext(), currentUser.getUserId());
-                startActivity(intent);
+        mSelectRetreat.setOnClickListener(view -> {
+            if(winnerDecided==1 && cpuHuman.getHumanId()==6){
+                mUsersDAO.update(currentUser);
             }
+            Intent intent = BattleHumanActivity.getIntent(getApplicationContext(), currentUser.getUserId());
+            startActivity(intent);
         });
 
-        mSelectMove1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                combatRound(mBattleText,0);
-            }
-        });
+        mSelectMove1.setOnClickListener(view -> combatRound(mBattleText,0));
 
-        mSelectMove2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                combatRound(mBattleText,1);
-            }
-        });
+        mSelectMove2.setOnClickListener(view -> combatRound(mBattleText,1));
 
-        mSelectMove3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                combatRound(mBattleText,2);
-            }
-        });
+        mSelectMove3.setOnClickListener(view -> combatRound(mBattleText,2));
 
-        mSelectMove4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                combatRound(mBattleText,3);
-            }
-        });
+        mSelectMove4.setOnClickListener(view -> combatRound(mBattleText,3));
 
     }
     public void output(TextView t, String s){
         //prints texts to screen and scrolls to bottom
         t.append("\n"+ s);
         t.scrollTo(0,t.getLayout().getLineTop(t.getLineCount()) - t.getHeight());
-        return;
     }
     public void useMove(Move m, TextView t, Human user, Human target){
         //outputs results of a human using a move
@@ -253,6 +234,7 @@ public class BattleHumanActivity extends AppCompatActivity {
     }
     public void combatRound(TextView t,int moveIndex){
         //Runs a round of combat, used when user selects a move
+        output(t,"-------------");
         if(playerHuman.getModifiedSpeed()<cpuHuman.getModifiedSpeed()){
             //cpu is faster
             System.out.println(random.nextInt(4)+4);//for some reason the next line breaks if this sout isn't here???
@@ -268,7 +250,26 @@ public class BattleHumanActivity extends AppCompatActivity {
                 useMove(moves.get(random.nextInt(4)+4),t,cpuHuman,playerHuman);
             }
         }
-
+        if(playerHuman.getHp()<=0){
+            winnerDecided=2;//this means the cpu won
+        }
+        if(cpuHuman.getHp()<=0){
+            winnerDecided=1;//this means player won
+            if(cpuHuman.getHumanId()==6){
+//                if the opponent is dr.C the user will unlock him
+                currentUser.setUnlockedDrC(true);
+//                mUsersDAO.update(currentUser);
+            }
+        }
+        if(winnerDecided!=0){
+            mSelectMove1.setEnabled(false);
+            mSelectMove2.setEnabled(false);
+            mSelectMove3.setEnabled(false);
+            mSelectMove4.setEnabled(false);
+            mSelectRetreat.setText("New Battle");
+            mSelectRetreat.setBackgroundColor(Color.GREEN);
+            mSelectRetreat.setTextColor(Color.BLACK);
+        }
     }
     public static Intent getIntent(Context context, int userId){
         Intent intent = new Intent(context, BattleHumanActivity.class);

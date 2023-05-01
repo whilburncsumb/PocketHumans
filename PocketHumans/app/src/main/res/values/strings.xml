@@ -26,4 +26,5 @@
     <string name="name">Name</string>
     <string name="submit">Submit</string>
     <string name="stat_total_must_not_exceed_90">Stat total must not exceed 90</string>
+    <string name="long_press_hint">\nHint: Long Press a move button to see it\'s description!</string>
 </resources>
