@@ -182,8 +182,7 @@ public class BattleHumanActivity extends AppCompatActivity {
                 TooltipCompat.setTooltipText(mSelectMove3,moves.get(2).getDescription());
                 mSelectMove4.setText(moves.get(3).getName());
                 TooltipCompat.setTooltipText(mSelectMove4,moves.get(3).getDescription());
-                mYourHealthBarText.setText(playerHuman.getName()  + getString(R.string.colon) + playerHuman.getHp() + getString(R.string.outof100));
-                mEnemyHealthBarText.setText(cpuHuman.getName()  + getString(R.string.colon) + cpuHuman.getHp() + getString(R.string.outof100));
+                refreshHPDisplay();
                 mBattleText.append("\n" + playerHuman.getName() + " versus " + cpuHuman.getName() + "!");
                 mBattleText.append(getString(R.string.long_press_hint));
 

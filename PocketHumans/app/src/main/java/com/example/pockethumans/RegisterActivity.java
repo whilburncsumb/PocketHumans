@@ -6,7 +6,6 @@ import androidx.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,46 +45,39 @@ public class RegisterActivity extends AppCompatActivity {
                 .build()
                 .UserLoginDAO();
 
-        mRegisterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = mRegisterUsername.getText().toString();
-                String password = mRegisterPassword.getText().toString();
-                String confirm = mRegisterPasswordConfirm.getText().toString();
+        mRegisterButton.setOnClickListener(v -> {
+            String username = mRegisterUsername.getText().toString();
+            String password = mRegisterPassword.getText().toString();
+            String confirm = mRegisterPasswordConfirm.getText().toString();
 
-                if (username.length() == 0) {
-                    mRegisterFeedback.setText(R.string.username_cannot_be_blank);
-                    return;
-                }
-                if (password.length() == 0) {
-                    mRegisterFeedback.setText(R.string.password_cannot_be_blank);
-                    return;
-                }
-                //Check if username is taken
-                if (mUsersDAO.listUsernames().contains(username)) {
-                    mRegisterFeedback.setText(R.string.username_taken);
-                    return;
-                }
-                //Check if passwords match
-                if (!password.equals(confirm)) {
-                    mRegisterFeedback.setText(R.string.password_mismatch);
-                    return;
-                } else {
-                    mRegisterFeedback.setText("");
-                    User user = new User(username, password, false);
-                    mUsersDAO.insert(user);
-                    Intent intent = LandingActivity.getIntent(getApplicationContext(), user.getUserId());
-                    startActivity(intent);
-                }
+            if (username.length() == 0) {
+                mRegisterFeedback.setText(R.string.username_cannot_be_blank);
+                return;
+            }
+            if (password.length() == 0) {
+                mRegisterFeedback.setText(R.string.password_cannot_be_blank);
+                return;
+            }
+            //Check if username is taken
+            if (mUsersDAO.listUsernames().contains(username)) {
+                mRegisterFeedback.setText(R.string.username_taken);
+                return;
+            }
+            //Check if passwords match
+            if (!password.equals(confirm)) {
+                mRegisterFeedback.setText(R.string.password_mismatch);
+            } else {
+                mRegisterFeedback.setText("");
+                User user = new User(username, password, false);
+                mUsersDAO.insert(user);
+                Intent intent = LandingActivity.getIntent(getApplicationContext(), user.getUserId());
+                startActivity(intent);
             }
         });
 
-        mRegisterLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = MainActivity.getIntent(getApplicationContext());
-                startActivity(intent);
-            }
+        mRegisterLogin.setOnClickListener(v -> {
+            Intent intent = MainActivity.getIntent(getApplicationContext());
+            startActivity(intent);
         });
     }
 
