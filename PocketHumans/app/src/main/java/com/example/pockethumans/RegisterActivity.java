@@ -70,7 +70,7 @@ public class RegisterActivity extends AppCompatActivity {
                 mRegisterFeedback.setText("");
                 User user = new User(username, password, false);
                 mUsersDAO.insert(user);
-                Intent intent = LandingActivity.getIntent(getApplicationContext(), user.getUserId());
+                Intent intent = LandingActivity.getIntent(getApplicationContext(), mUsersDAO.checkLogin(user.getUsername(),user.getPassword()).getUserId());
                 startActivity(intent);
             }
         });

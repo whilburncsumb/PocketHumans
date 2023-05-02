@@ -19,6 +19,7 @@ import com.example.pockethumans.databinding.ActivityMainBinding;
 import java.util.ArrayList;
 import java.util.List;
 
+//https://youtu.be/cbt5IFiPg-k Video demonstration link
 public class MainActivity extends AppCompatActivity {
     EditText mLoginUsername;
     EditText mLoginPassword;
