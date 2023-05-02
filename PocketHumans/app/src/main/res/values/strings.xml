@@ -42,4 +42,6 @@
     <string name="defense">Defense</string>
     <string name="attack">Attack</string>
     <string name="select_moves">Select Moves</string>
+    <string name="create_your_human">Create your human!</string>
+    <string name="admins_can_give_a_human_more_than_90_stat_points">Admins can give a human more than 90 stat points.</string>
 </resources>

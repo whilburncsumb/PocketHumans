@@ -54,11 +54,14 @@ public class LandingActivity extends AppCompatActivity {
             Intent intent = BattleHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId());
             startActivity(intent);
         });
-        mEditHumanButton.setOnClickListener(v -> {
-            Intent intent = EditHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId());
+        mMakeHumanButton.setOnClickListener(v -> {
+            Intent intent = EditHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId(),false);
             startActivity(intent);
         });
-
+        mEditHumanButton.setOnClickListener(v -> {
+            Intent intent = EditHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId(),true);
+            startActivity(intent);
+        });
         mLogoutButton.setOnClickListener(v -> {
                 Intent intent = MainActivity.getIntent(getApplicationContext());
                 startActivity(intent);

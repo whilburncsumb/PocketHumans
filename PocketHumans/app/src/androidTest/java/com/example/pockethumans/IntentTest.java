@@ -41,7 +41,7 @@ public class IntentTest extends TestCase {
     public void testEditIntent() {
         Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         int userId = 1;
-        Intent intent = EditHumanActivity.getIntent(context,userId);
+        Intent intent = EditHumanActivity.getIntent(context,userId,false);
         assertNotNull(intent);
         assertEquals(EditHumanActivity.class.getName(), intent.getComponent().getClassName());
         assertEquals(userId, intent.getIntExtra("USERID", -1));
