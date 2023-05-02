@@ -3,6 +3,9 @@ package com.example.pockethumans;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import com.example.pockethumans.DB.AppDatabase;
+
+import java.util.Objects;
+
 @Entity(tableName = AppDatabase.USER_TABLE)
 public class User {
     @PrimaryKey(autoGenerate = true)
@@ -27,6 +30,19 @@ public class User {
                 ", password='" + password + '\'' +
                 ", isAdmin=" + isAdmin +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return userId == user.userId && isAdmin == user.isAdmin && Objects.equals(username, user.username) && Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, username, password, isAdmin);
     }
 
     public boolean isUnlockedDrC() {

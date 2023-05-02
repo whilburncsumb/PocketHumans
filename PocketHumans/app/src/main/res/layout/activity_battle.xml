@@ -102,7 +102,7 @@
             android:layout_width="400dp"
             android:layout_height="300dp"
             android:layout_marginTop="16dp"
-            android:background="#99FFEB3B"
+            android:background="#FFFACC"
             android:text="@string/begin_human_battle"
             android:scrollbars = "vertical"
             android:textColor="#E4181A39"
