@@ -10,11 +10,13 @@ public class User {
     private String username;
     private String password;
     private boolean isAdmin;
+    private boolean unlockedDrC;
 
     public User(String username, String password, boolean isAdmin) {
         this.username = username;
         this.password = password;
         this.isAdmin = isAdmin;
+        this.unlockedDrC = isAdmin;//admins can automatically use Dr.C in battle
     }
 
     @Override
@@ -25,6 +27,14 @@ public class User {
                 ", password='" + password + '\'' +
                 ", isAdmin=" + isAdmin +
                 '}';
+    }
+
+    public boolean isUnlockedDrC() {
+        return unlockedDrC;
+    }
+
+    public void setUnlockedDrC(boolean unlockedDrC) {
+        this.unlockedDrC = unlockedDrC;
     }
 
     public int getUserId() {

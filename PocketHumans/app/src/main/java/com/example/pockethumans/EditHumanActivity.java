@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -100,32 +99,29 @@ public class EditHumanActivity extends AppCompatActivity {
             }
         });
 
-        mSubmitHumanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //submit new values when user clicks submit
-                int attack = Integer.parseInt(mEditAttack.getText().toString());
-                int defense = Integer.parseInt(mEditDefense.getText().toString());
-                int speed = Integer.parseInt(mEditSpeed.getText().toString());
-                int total = (attack + defense + speed);
-                if(total>90){
-                    mStatFeedback.setTextColor(Color.RED);
-                    mStatFeedback.setTypeface(Typeface.DEFAULT_BOLD);
-                    animator.start();
-                } else {
-                    //Update the human
-                    Human updateHuman = new Human(mEditHumanName.getText().toString(),mEditHumanDescription.getText().toString(),
-                            attack,defense,speed,mSelectMove1.getSelectedItemPosition()+1,mSelectMove2.getSelectedItemPosition()+1,mSelectMove3.getSelectedItemPosition()+1,mSelectMove4.getSelectedItemPosition()+1);
-                    System.out.println(mSelectMove1.getSelectedItemPosition()+1);
-                    System.out.println(mSelectMove2.getSelectedItemPosition()+1);
-                    System.out.println(mSelectMove3.getSelectedItemPosition()+1);
-                    System.out.println(mSelectMove4.getSelectedItemPosition()+1);
+        mSubmitHumanButton.setOnClickListener(v -> {
+            //submit new values when user clicks submit
+            int attack = Integer.parseInt(mEditAttack.getText().toString());
+            int defense = Integer.parseInt(mEditDefense.getText().toString());
+            int speed = Integer.parseInt(mEditSpeed.getText().toString());
+            int total = (attack + defense + speed);
+            if(total>90){
+                mStatFeedback.setTextColor(Color.RED);
+                mStatFeedback.setTypeface(Typeface.DEFAULT_BOLD);
+                animator.start();
+            } else {
+                //Update the human
+                Human updateHuman = new Human(mEditHumanName.getText().toString(),mEditHumanDescription.getText().toString(),
+                        attack,defense,speed,mSelectMove1.getSelectedItemPosition()+1,mSelectMove2.getSelectedItemPosition()+1,mSelectMove3.getSelectedItemPosition()+1,mSelectMove4.getSelectedItemPosition()+1);
+                System.out.println(mSelectMove1.getSelectedItemPosition()+1);
+                System.out.println(mSelectMove2.getSelectedItemPosition()+1);
+                System.out.println(mSelectMove3.getSelectedItemPosition()+1);
+                System.out.println(mSelectMove4.getSelectedItemPosition()+1);
 //                            attack,defense,speed,1,1,1,1);
-                    updateHuman.setHumanId(((Human) mSelectHumanSpinner.getSelectedItem()).getHumanId());//this is a ridiculous way of getting the ID of the currently selected human. I hate it.
-                    mHumanDAO.update(updateHuman);
-                    Intent intent = LandingActivity.getIntent(getApplicationContext(), currentUser.getUserId());
-                    startActivity(intent);
-                }
+                updateHuman.setHumanId(((Human) mSelectHumanSpinner.getSelectedItem()).getHumanId());//this is a ridiculous way of getting the ID of the currently selected human. I hate it.
+                mHumanDAO.update(updateHuman);
+                Intent intent = LandingActivity.getIntent(getApplicationContext(), currentUser.getUserId());
+                startActivity(intent);
             }
         });
     }

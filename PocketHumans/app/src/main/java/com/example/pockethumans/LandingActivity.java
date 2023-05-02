@@ -6,7 +6,6 @@ import androidx.room.Room;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -51,27 +50,18 @@ public class LandingActivity extends AppCompatActivity {
             mEditHumanButton.setVisibility(View.VISIBLE);
         }
 
-        mHumanBattleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = BattleHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId());
-                startActivity(intent);
-            }
+        mHumanBattleButton.setOnClickListener(view -> {
+            Intent intent = BattleHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId());
+            startActivity(intent);
         });
-        mEditHumanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = EditHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId());
-                startActivity(intent);
-            }
+        mEditHumanButton.setOnClickListener(v -> {
+            Intent intent = EditHumanActivity.getIntent(getApplicationContext(),currentUser.getUserId());
+            startActivity(intent);
         });
 
-        mLogoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    Intent intent = MainActivity.getIntent(getApplicationContext());
-                    startActivity(intent);
-            }
+        mLogoutButton.setOnClickListener(v -> {
+                Intent intent = MainActivity.getIntent(getApplicationContext());
+                startActivity(intent);
         });
     }
 

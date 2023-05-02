@@ -5,9 +5,6 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import com.example.pockethumans.DB.AppDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity(tableName = AppDatabase.HUMAN_TABLE)
 public class Human {
     @PrimaryKey(autoGenerate = true)
@@ -28,11 +25,11 @@ public class Human {
     private double defenseModifier = 1;
     @Ignore
     private double speedModifier = 1;
-//    private List<Move> moves = new ArrayList<>();
     private int move1id;
     private int move2id;
     private int move3id;
     private int move4id;
+
 
     public Human(String name, String description, int attack, int defense, int speed, int move1id, int move2id, int move3id, int move4id) {
         this.name = name;
@@ -83,6 +80,10 @@ public class Human {
         this.hp = hp;
     }
 
+    public void addHp(double hp) {
+        this.hp += hp;
+    }
+
     public int getAttack() {
         return attack;
     }
@@ -102,6 +103,12 @@ public class Human {
     public int getSpeed() {
         return speed;
     }
+
+    public double getModifiedAttack(){ return (double) attack*attackModifier; }
+
+    public double getModifiedDefense(){ return (double) defense*defenseModifier; }
+
+    public double getModifiedSpeed(){ return (double) speed*speedModifier; }
 
     public void setSpeed(int speed) {
         this.speed = speed;

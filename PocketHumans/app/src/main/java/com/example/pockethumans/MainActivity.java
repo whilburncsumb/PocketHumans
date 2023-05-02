@@ -1,22 +1,20 @@
 package com.example.pockethumans;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.pockethumans.databinding.ActivityMainBinding;
-import com.example.pockethumans.DB.UserLoginDAO;
-import com.example.pockethumans.DB.MovesDAO;
-import com.example.pockethumans.DB.HumanDAO;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.room.Room;
+
 import com.example.pockethumans.DB.AppDatabase;
+import com.example.pockethumans.DB.HumanDAO;
+import com.example.pockethumans.DB.MovesDAO;
+import com.example.pockethumans.DB.UserLoginDAO;
+import com.example.pockethumans.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 .build()
                 .HumanDAO();
 
-        //build the database, including the predefined users, moves, and humans if they dont exist
+        //build the database, including the predefined users, moves, and humans if they don't exist
         List<Move> premadeMoves = new ArrayList<>();
         premadeMoves.add(new Move("Tackle", "User tackles the opponent, damaging them.", 25, "attack"));//1
         premadeMoves.add(new Move("Headbutt", "User headbutts the opponent with abandon, damaging them.", 30, "attack"));//2
@@ -117,34 +115,28 @@ public class MainActivity extends AppCompatActivity {
                 mHumanDAO.insert(i);
             }
         }
-        //Add predefined users if they dont exist
+        //Add predefined users if they don't exist
         if (mUsersDAO.checkLogin(testuser1.getUsername(), testuser1.getPassword()) == null) {
             mUsersDAO.insert(testuser1);
             mUsersDAO.insert(admin2);
             mUsersDAO.insert(a);
         }
 
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //if login found
-                User user = (mUsersDAO.checkLogin(mLoginUsername.getText().toString(), mLoginPassword.getText().toString()));
-                if (user != null) {
+        mLoginButton.setOnClickListener(v -> {
+            //if login found
+            User user = (mUsersDAO.checkLogin(mLoginUsername.getText().toString(), mLoginPassword.getText().toString()));
+            if (user != null) {
 //                    mLoginFeedback.setText("Welcome, user!");
-                    Intent intent = LandingActivity.getIntent(getApplicationContext(), user.getUserId());
-                    startActivity(intent);
-                } else {//if login not found
-                    mLoginFeedback.setText(R.string.login_fail_feedback);//user not found feedback
-                }
+                Intent intent = LandingActivity.getIntent(getApplicationContext(), user.getUserId());
+                startActivity(intent);
+            } else {//if login not found
+                mLoginFeedback.setText(R.string.login_fail_feedback);//user not found feedback
             }
         });
 
-        mLoginRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = RegisterActivity.getIntent(getApplicationContext());
-                startActivity(intent);
-            }
+        mLoginRegister.setOnClickListener(v -> {
+            Intent intent = RegisterActivity.getIntent(getApplicationContext());
+            startActivity(intent);
         });
     }
 
