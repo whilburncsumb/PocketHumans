@@ -5,9 +5,6 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 import com.example.pockethumans.DB.AppDatabase;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity(tableName = AppDatabase.HUMAN_TABLE)
 public class Human {
     @PrimaryKey(autoGenerate = true)
